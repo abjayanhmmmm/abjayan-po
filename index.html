@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en" class="dark-mode">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abjayan Photography</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f9f8f6;
+            --text: #1a1a1a;
+            --accent: #b8956a;
+            --secondary: #efefed;
+            --muted: #7a7a7a;
+            --border: #e0dcd8;
+            --gold: #a89968;
+        }
+
+        html.dark-mode {
+            --bg: #0f0f0f;
+            --text: #f5f5f5;
+            --accent: #c9a961;
+            --secondary: #1a1a1a;
+            --muted: #888;
+            --border: #2a2a2a;
+            --gold: #c9a961;
+        }
+
+        html, body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Lora', serif;
+            line-height: 1.8;
+            letter-spacing: 0.2px;
+            transition: background 0.5s ease, color 0.5s ease;
+            overflow-x: hidden;
+        }
+
+        /* CINEMATIC GRAIN OVERLAY */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(0, 0, 0, 0.015),
+                    rgba(0, 0, 0, 0.015) 1px,
+                    transparent 1px,
+                    transparent 2px
+                );
+            pointer-events: none;
+            z-index: 1;
+            animation: grainShift 0.2s steps(1) infinite;
+        }
+
+        @keyframes grainShift {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 4px; }
+        }
+
+        /* SUBTLE COLOR GRADING */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.05) 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* BLOBS - VERY SUBTLE, WARM TONES */
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.025;
+            pointer-events: none;
+            animation: float 40s infinite ease-in-out;
+            mix-blend-mode: multiply;
+        }
+
+        .blob-warm {
+            background: #d4a574;
+        }
+
+        .blob-cool {
+            background: #5a7a95;
+        }
+
+        .blob-1 {
+            width: 600px;
+            height: 600px;
+            top: -15%;
+            left: -10%;
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            width: 500px;
+            height: 500px;
+            top: 45%;
+            right: -8%;
+            animation-delay: 8s;
+        }
+
+        .blob-3 {
+            width: 550px;
+            height: 550px;
+            bottom: -10%;
+            left: 8%;
+            animation-delay: 16s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(50px, -60px) scale(1.01);
+            }
+            66% {
+                transform: translate(-30px, 50px) scale(0.99);
+            }
+        }
+
+        /* HEADER - CINEMA STYLE */
+        header {
+            padding: 1.8rem 2.5rem;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: rgba(249, 248, 246, 0.92);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            transition: all 0.4s ease;
+        }
+
+        html.dark-mode header {
+            background: rgba(15, 15, 15, 0.92);
+        }
+
+        .header-content {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-family: 'Space Mono', monospace;
+            color: #000;
+            transition: opacity 0.3s ease;
+        }
+
+        html.dark-mode .logo {
+            color: #f5f5f5;
+        }
+
+        .logo:hover {
+            opacity: 0.7;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .header-nav a {
+            color: #000;
+            text-decoration: none;
+            font-size: 0.7rem;
+            transition: all 0.3s ease;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-family: 'Space Mono', monospace;
+            font-weight: 400;
+            position: relative;
+        }
+
+        html.dark-mode .header-nav a {
+            color: #f5f5f5;
+        }
+
+        .header-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .header-nav a:hover::after {
+            width: 100%;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 1px solid #000;
+            color: #000;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-family: 'Space Mono', monospace;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 400;
+        }
+
+        html.dark-mode .theme-toggle {
+            color: #f5f5f5;
+            border-color: #f5f5f5;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: scale(1.08);
+        }
+
+        /* SPLASH SCREEN - VIDEO BACKGROUND */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            cursor: pointer;
+            transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94), visibility 0.9s ease;
+            overflow: hidden;
+        }
+
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        .video-background iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            object-fit: cover;
+        }
+
+        .splash-screen::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(0, 0, 0, 0.04),
+                    rgba(0, 0, 0, 0.04) 1px,
+                    transparent 1px,
+                    transparent 2px
+                ),
+                radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+            pointer-events: none;
+            z-index: 1;
+            animation: grainShift 0.2s steps(1) infinite;
+        }
+
+        .splash-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .splash-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        .splash-content {
+            text-align: center;
+            animation: fadeInSplash 1.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            padding: 5rem 6rem;
+            border-radius: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+        }
+
+        html.dark-mode .splash-content {
+            background: rgba(30, 30, 30, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        @keyframes fadeInSplash {
+            0% {
+                opacity: 0;
+                transform: translateY(-40px) scale(0.92);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .splash-title {
+            font-size: 5rem;
+            font-weight: 400;
+            letter-spacing: -4px;
+            margin-bottom: 0.8rem;
+            line-height: 1;
+            font-family: 'Lora', serif;
+            color: #000;
+            font-style: italic;
+        }
+
+        html.dark-mode .splash-title {
+            color: #f5f5f5;
+        }
+
+        .splash-subtitle {
+            font-size: 1.2rem;
+            color: var(--muted);
+            margin-bottom: 3rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-family: 'Space Mono', monospace;
+            font-weight: 400;
+            font-size: 0.9rem;
+        }
+
+        /* VIDEO EMBED */
+        .video-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            animation: slideInUp 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .video-container iframe {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border: none;
+            border-radius: 2px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .splash-cta {
+            font-size: 0.8rem;
+            color: var(--accent);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: bounce 2.2s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+            font-family: 'Space Mono', monospace;
+            font-weight: 400;
+            margin-top: 2rem;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(-15px);
+                opacity: 1;
+            }
+        }
+
+        .splash-screen::before {
+            content: '';
+            position: absolute;
+            bottom: 60px;
+            width: 1.5px;
+            height: 40px;
+            background: var(--accent);
+            animation: blink 1.6s infinite;
+            z-index: 2;
+        }
+
+        @keyframes blink {
+            0%, 49%, 100% {
+                opacity: 1;
+            }
+            50%, 99% {
+                opacity: 0;
+            }
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            display: none;
+            position: relative;
+            z-index: 10;
+        }
+
+        .main-content.visible {
+            display: block;
+        }
+
+        /* MAIN */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 5rem 2.5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* HERO */
+        .hero {
+            margin-bottom: 8rem;
+            text-align: center;
+            opacity: 0;
+            animation: fadeInDown 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s forwards;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            letter-spacing: -2.5px;
+            color: #000;
+            font-style: italic;
+        }
+
+        html.dark-mode .hero h1 {
+            color: #f5f5f5;
+        }
+
+        .hero h1 .accent {
+            color: var(--accent);
+        }
+
+        .hero-description {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 750px;
+            margin: 0 auto;
+            line-height: 1.95;
+            font-weight: 300;
+        }
+
+        /* CINEMATIC DIVIDER */
+        .divider {
+            width: 80px;
+            height: 1px;
+            background: var(--accent);
+            margin: 3rem auto;
+            opacity: 0.6;
+        }
+
+        /* GALLERY - CONTACT SHEET CINEMATIC */
+        .gallery-section {
+            margin-bottom: 9rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .gallery-title {
+            font-size: 1.4rem;
+            margin-bottom: 4rem;
+            text-align: center;
+            font-weight: 400;
+            letter-spacing: 2px;
+            color: #000;
+            text-transform: uppercase;
+        }
+
+        html.dark-mode .gallery-title {
+            color: #f5f5f5;
+        }
+
+        .gallery-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 1px;
+            background: var(--accent);
+            margin: 1.5rem auto 0;
+        }
+
+        .contact-sheet {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .contact-sheet-item {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--secondary);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            group: "sheet";
+        }
+
+        .contact-sheet-item:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            border-color: var(--accent);
+        }
+
+        .contact-sheet-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            filter: contrast(1.05) brightness(1.08);
+        }
+
+        .contact-sheet-item:hover img {
+            transform: scale(1.12);
+            filter: contrast(0.95) brightness(0.75) saturate(0.9);
+        }
+
+        .contact-sheet-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+            color: white;
+            padding: 2rem 1.5rem 1.5rem;
+            transform: translateY(40px);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 0;
+            z-index: 5;
+        }
+
+        .contact-sheet-item:hover .contact-sheet-caption {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .contact-sheet-caption p {
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            font-family: 'Space Mono', monospace;
+            line-height: 1.6;
+        }
+
+        /* DETAILED SLIDER */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--secondary);
+            border-radius: 2px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
+            border: 1px solid var(--border);
+            transition: all 0.4s ease;
+        }
+
+        .slider-container:hover {
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.18);
+        }
+
+        .slider-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(180, 150, 100, 0.05), rgba(90, 120, 150, 0.05));
+        }
+
+        .slider-wrapper.ultrawide {
+            aspect-ratio: 21/9;
+        }
+
+        .slider-wrapper.portrait {
+            aspect-ratio: 4/5;
+            max-height: 500px;
+        }
+
+        .gallery-item {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: var(--secondary);
+            filter: contrast(1.08) brightness(1.05) saturate(1.1);
+        }
+
+        .gallery-item.active {
+            display: block;
+            animation: imageSwap 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes imageSwap {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .slider-nav {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.7rem;
+            z-index: 10;
+        }
+
+        .slider-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.25);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: none;
+            padding: 0;
+        }
+
+        html.dark-mode .slider-dot {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .slider-dot.active {
+            background: var(--accent);
+            transform: scale(1.4);
+        }
+
+        .slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.3);
+            color: white;
+            border: none;
+            padding: 1rem 1.3rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 10;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .slider-arrow:hover {
+            background: rgba(0,0,0,0.6);
+            transform: translateY(-50%) scale(1.15);
+        }
+
+        .slider-arrow.prev {
+            left: 1.5rem;
+        }
+
+        .slider-arrow.next {
+            right: 1.5rem;
+        }
+
+        .slider-counter {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2px;
+            font-size: 0.7rem;
+            z-index: 10;
+            letter-spacing: 1.5px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 400;
+        }
+
+        /* SECTIONS */
+        .section-container {
+            margin-bottom: 8rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .section-container:nth-child(4) {
+            animation-delay: 0.6s;
+        }
+
+        .section-container:nth-child(5) {
+            animation-delay: 0.7s;
+        }
+
+        .section-container:nth-child(6) {
+            animation-delay: 0.8s;
+        }
+
+        .section-header {
+            font-size: 1.4rem;
+            font-weight: 400;
+            margin-bottom: 3rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            color: #000;
+            text-transform: uppercase;
+        }
+
+        html.dark-mode .section-header {
+            color: #f5f5f5;
+        }
+
+        .section-header .highlight {
+            color: var(--accent);
+        }
+
+        .accent-line {
+            width: 60px;
+            height: 1px;
+            background: var(--accent);
+            margin-left: auto;
+        }
+
+        /* PRICING */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        .price-card {
+            padding: 3.5rem;
+            background: var(--secondary);
+            border-radius: 2px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .price-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.6s ease;
+            pointer-events: none;
+        }
+
+        .price-card:hover::before {
+            left: 100%;
+        }
+
+        .price-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+            border-color: var(--accent);
+        }
+
+        .price-card h3 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            letter-spacing: 1.5px;
+            color: #000;
+        }
+
+        html.dark-mode .price-card h3 {
+            color: #f5f5f5;
+        }
+
+        .price {
+            font-size: 2.2rem;
+            color: var(--accent);
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            font-family: 'Space Mono', monospace;
+            font-style: italic;
+        }
+
+        .price-description {
+            font-size: 1rem;
+            color: var(--muted);
+            line-height: 1.9;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .price-features {
+            font-size: 0.9rem;
+            color: var(--muted);
+            line-height: 2.2;
+            margin-bottom: 2.5rem;
+        }
+
+        .price-features li {
+            list-style: none;
+            padding: 0.6rem 0;
+        }
+
+        .price-features li::before {
+            content: '▪ ';
+            color: var(--accent);
+            margin-right: 0.8rem;
+            font-weight: bold;
+        }
+
+        .price-help {
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .price-help p {
+            font-size: 0.9rem;
+            color: var(--muted);
+            line-height: 1.9;
+            margin-bottom: 0.6rem;
+            font-weight: 300;
+        }
+
+        .price-help strong {
+            color: #000;
+        }
+
+        html.dark-mode .price-help strong {
+            color: #f5f5f5;
+        }
+
+        /* ABOUT */
+        .about {
+            background: var(--secondary);
+            padding: 4rem;
+            border-radius: 2px;
+            border: 1px solid var(--border);
+            transition: all 0.4s ease;
+        }
+
+        .about:hover {
+            border-color: var(--accent);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .about h2 {
+            font-size: 1.3rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1.5px;
+            color: #000;
+        }
+
+        html.dark-mode .about h2 {
+            color: #f5f5f5;
+        }
+
+        .about p {
+            font-size: 1rem;
+            line-height: 2;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        /* CONTACT */
+        .contact {
+            padding: 4rem;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            text-align: center;
+            background: var(--secondary);
+            transition: all 0.4s ease;
+        }
+
+        .contact:hover {
+            border-color: var(--accent);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .contact h2 {
+            font-size: 1.4rem;
+            font-weight: 400;
+            margin-bottom: 3rem;
+            letter-spacing: 2px;
+            color: #000;
+            text-transform: uppercase;
+        }
+
+        html.dark-mode .contact h2 {
+            color: #f5f5f5;
+        }
+
+        .contact-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .contact-item {
+            padding: 2rem;
+            background: var(--bg);
+            border-radius: 2px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid var(--border);
+        }
+
+        .contact-item:hover {
+            transform: translateY(-6px);
+            border-color: var(--accent);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-label {
+            font-size: 0.7rem;
+            color: var(--muted);
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            font-family: 'Space Mono', monospace;
+            font-weight: 400;
+        }
+
+        .contact-value {
+            font-size: 1rem;
+            color: #000;
+            font-weight: 400;
+        }
+
+        html.dark-mode .contact-value {
+            color: #f5f5f5;
+        }
+
+        .contact-value a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .contact-value a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .contact-value a:hover::after {
+            width: 100%;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 4rem 2.5rem;
+            color: var(--muted);
+            font-size: 0.75rem;
+            border-top: 1px solid var(--border);
+            margin-top: 6rem;
+            position: relative;
+            z-index: 10;
+            letter-spacing: 1.5px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 300;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        footer a:hover {
+            opacity: 0.7;
+        }
+
+        footer p {
+            margin-bottom: 0.8rem;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            main {
+                padding: 3rem 1.5rem;
+            }
+
+            .splash-title {
+                font-size: 3.5rem;
+            }
+
+            .splash-content {
+                padding: 3rem 3.5rem;
+            }
+
+            .contact-sheet {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 1.2rem;
+            }
+
+            .header-nav {
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- CINEMATIC GRAIN & COLOR GRADING -->
+
+<!-- BLOBS -->
+<div class="blob blob-warm blob-1"></div>
+<div class="blob blob-cool blob-2"></div>
+<div class="blob blob-warm blob-3"></div>
+
+<!-- SPLASH SCREEN - VIDEO BACKGROUND -->
+<div class="splash-screen" id="splashScreen">
+    <div class="video-background">
+        <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID?autoplay=1&mute=1&controls=0&loop=1&playlist=YOUR_VIDEO_ID&modestbranding=1" allow="autoplay" title="Abjayan Behind the Scenes"></iframe>
+    </div>
+    <div class="splash-wrapper">
+        <div class="splash-content">
+            <h1 class="splash-title">Abjayan</h1>
+            <p class="splash-subtitle">Cinematic Analog Photography</p>
+            <p class="splash-cta">Click to enter</p>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-content" id="mainContent">
+
+<header>
+    <div class="header-content">
+        <div class="logo">Abjayan</div>
+        <nav class="header-nav">
+            <a href="#gallery">Gallery</a>
+            <a href="#pricing">How It Works</a>
+            <a href="#contact">Contact</a>
+            <button class="theme-toggle" onclick="toggleTheme()">☀️ Theme</button>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <!-- HERO -->
+    <section class="hero">
+        <h1>Vintage Vehicles <span class="accent">on Film</span></h1>
+        <div class="divider"></div>
+        <p class="hero-description">Cinematic analog photography. Shooting vintage cars on Kodak, Fuji & Agfa across IIT Madras and the coffee plantations of Coorg. Low contrast, perfectly balanced. Every frame a moment.</p>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="gallery" class="gallery-section">
+        <h2 class="gallery-title">Contact Sheet</h2>
+        
+        <!-- Contact Sheet Grid -->
+        <div class="contact-sheet">
+            <div class="contact-sheet-item" onclick="goToSlide(0)">
+                <img src="https://i.postimg.cc/BnFwfT4Q/000000190022.jpg" alt="FIAT 1100">
+                <div class="contact-sheet-caption"><p>01 / FIAT 1100<br>IIT Madras</p></div>
+            </div>
+            <div class="contact-sheet-item" onclick="goToSlide(1)">
+                <img src="https://i.postimg.cc/gJsTBGdy/000000190003.jpg" alt="FIAT 1100">
+                <div class="contact-sheet-caption"><p>02 / FIAT 1100<br>IIT Madras</p></div>
+            </div>
+            <div class="contact-sheet-item" onclick="goToSlide(2)">
+                <img src="https://i.postimg.cc/W46WhsdW/20251015-9009-500T-ECN2-20.jpg" alt="Bikes">
+                <div class="contact-sheet-caption"><p>03 / Bikes<br>Coorg</p></div>
+            </div>
+            <div class="contact-sheet-item" onclick="goToSlide(3)">
+                <img src="https://i.postimg.cc/05Ht6WNN/20251015-9009-500T-ECN2-23.jpg" alt="Bikes">
+                <div class="contact-sheet-caption"><p>04 / Bikes<br>Coorg</p></div>
+            </div>
+            <div class="contact-sheet-item" onclick="goToSlide(4)">
+                <img src="https://i.postimg.cc/1tmWFb6z/F1000002.jpg" alt="Bikes">
+                <div class="contact-sheet-caption"><p>05 / Bikes<br>IIT Madras</p></div>
+            </div>
+            <div class="contact-sheet-item" onclick="goToSlide(5)">
+                <img src="https://i.postimg.cc/Qx9fcQBd/F1000021.jpg" alt="Bikes">
+                <div class="contact-sheet-caption"><p>06 / Bikes<br>Coorg</p></div>
+            </div>
+            <div class="contact-sheet-item" onclick="goToSlide(6)">
+                <img src="https://i.postimg.cc/7LytH5ZD/20251015-9009-500T-ECN2-15.jpg" alt="Bikes">
+                <div class="contact-sheet-caption"><p>07 / Bikes<br>Coorg</p></div>
+            </div>
+            <div class="contact-sheet-item" onclick="goToSlide(7)">
+                <img src="https://i.postimg.cc/1zcCfy86/20251015-9009-500T-ECN2-21.jpg" alt="Bikes">
+                <div class="contact-sheet-caption"><p>08 / Bikes<br>Coorg</p></div>
+            </div>
+        </div>
+
+        <!-- Detailed Slider -->
+        <div class="slider-container">
+            <div class="slider-wrapper">
+                <div class="gallery-item active">
+                    <img src="https://i.postimg.cc/BnFwfT4Q/000000190022.jpg" alt="Shot 1">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://i.postimg.cc/gJsTBGdy/000000190003.jpg" alt="Shot 2">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://i.postimg.cc/W46WhsdW/20251015-9009-500T-ECN2-20.jpg" alt="Shot 3">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://i.postimg.cc/05Ht6WNN/20251015-9009-500T-ECN2-23.jpg" alt="Shot 4">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://i.postimg.cc/1tmWFb6z/F1000002.jpg" alt="Shot 5">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://i.postimg.cc/Qx9fcQBd/F1000021.jpg" alt="Shot 6">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://i.postimg.cc/7LytH5ZD/20251015-9009-500T-ECN2-15.jpg" alt="Shot 7">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://i.postimg.cc/1zcCfy86/20251015-9009-500T-ECN2-21.jpg" alt="Shot 8">
+                </div>
+            </div>
+            <div class="slider-counter">
+                <span id="current-slide">1</span> / 8
+            </div>
+            <button class="slider-arrow prev" onclick="prevSlide()">‹</button>
+            <button class="slider-arrow next" onclick="nextSlide()">›</button>
+            <div class="slider-nav">
+                <button class="slider-dot active" onclick="goToSlide(0)"></button>
+                <button class="slider-dot" onclick="goToSlide(1)"></button>
+                <button class="slider-dot" onclick="goToSlide(2)"></button>
+                <button class="slider-dot" onclick="goToSlide(3)"></button>
+                <button class="slider-dot" onclick="goToSlide(4)"></button>
+                <button class="slider-dot" onclick="goToSlide(5)"></button>
+                <button class="slider-dot" onclick="goToSlide(6)"></button>
+                <button class="slider-dot" onclick="goToSlide(7)"></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="pricing" class="section-container">
+        <h2 class="section-header"><span class="highlight">How It Works</span><div class="accent-line"></div></h2>
+        
+        <div class="pricing-grid">
+            <div class="price-card">
+                <h3>Pricing</h3>
+                <p class="price">Free</p>
+                <p class="price-description">You get prints and digital scans. I build my portfolio. Mutual benefit.</p>
+                <ul class="price-features">
+                    <li>2 rolls of film (color or B&W)</li>
+                    <li>About 2-3 hours on location</li>
+                    <li>Physical prints (5x7 or 8x10)</li>
+                    <li>High-res digital zip file</li>
+                </ul>
+                <div class="price-help">
+                    <p><strong>How to Help</strong></p>
+                    <p>Know other car owners? That's the biggest help. Film donations welcome.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section-container">
+        <h2 class="section-header">About<div class="accent-line"></div></h2>
+        <div class="about">
+            <h2>The Photographer</h2>
+            <p>I'm 15, based in Chennai. Started with digital, fell in love with analog. Now shooting on Pentax KM. Every frame is intentional. Working with Kodak Portra, Fuji Superia, and Agfa Vista. Every photograph is a conversation between light, chemistry, and time.</p>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section-container">
+        <h2 class="section-header">Get In Touch<div class="accent-line"></div></h2>
+        <div class="contact">
+            <div class="contact-methods">
+                <div class="contact-item">
+                    <div class="contact-label">Email</div>
+                    <div class="contact-value">
+                        <a href="mailto:abjayandiscord@gmail.com">abjayandiscord<br>@gmail.com</a>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-label">WhatsApp</div>
+                    <div class="contact-value">
+                        <a href="https://wa.me/19797092600" target="_blank">+1 (979)<br>709-2600</a>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-label">Instagram</div>
+                    <div class="contact-value">
+                        <a href="https://instagram.com/analogbyabjayan" target="_blank">@analogbyabjayan</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <p><a href="https://instagram.com/analogbyabjayan" target="_blank">@analogbyabjayan</a> | IIT Madras | 2026</p>
+    <p>Shot on Kodak, Fuji & Agfa</p>
+</footer>
+
+</div> <!-- Close main-content -->
+
+<script>
+// Splash screen
+const splashScreen = document.getElementById('splashScreen');
+const mainContent = document.getElementById('mainContent');
+
+splashScreen.addEventListener('click', () => {
+    splashScreen.classList.add('hidden');
+    mainContent.classList.add('visible');
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !splashScreen.classList.contains('hidden')) {
+        splashScreen.classList.add('hidden');
+        mainContent.classList.add('visible');
+    }
+});
+
+// Gallery
+let currentSlide = 0;
+const slides = document.querySelectorAll('.gallery-item');
+const dots = document.querySelectorAll('.slider-dot');
+const sliderWrapper = document.querySelector('.slider-wrapper');
+const themeToggle = document.querySelector('.theme-toggle');
+const totalSlides = slides.length;
+let isDarkMode = true;
+
+function showSlide(n) {
+    slides.forEach(slide => slide.classList.remove('active'));
+    dots.forEach(dot => dot.classList.remove('active'));
+    
+    slides[n].classList.add('active');
+    dots[n].classList.add('active');
+    document.getElementById('current-slide').textContent = n + 1;
+    currentSlide = n;
+    
+    sliderWrapper.classList.remove('ultrawide', 'portrait');
+    if (n === 0 || n === 1) {
+        sliderWrapper.classList.add('ultrawide');
+    } else if (n === 5 || n === 6 || n === 7) {
+        sliderWrapper.classList.add('portrait');
+    }
+}
+
+function nextSlide() {
+    showSlide((currentSlide + 1) % totalSlides);
+}
+
+function prevSlide() {
+    showSlide((currentSlide - 1 + totalSlides) % totalSlides);
+}
+
+function goToSlide(n) {
+    showSlide(n);
+    document.querySelector('.slider-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function toggleTheme() {
+    const html = document.documentElement;
+    
+    if (isDarkMode) {
+        html.classList.remove('dark-mode');
+        themeToggle.textContent = '🌙 Theme';
+        localStorage.setItem('theme', 'light');
+        isDarkMode = false;
+    } else {
+        html.classList.add('dark-mode');
+        themeToggle.textContent = '☀️ Theme';
+        localStorage.setItem('theme', 'dark');
+        isDarkMode = true;
+    }
+}
+
+window.addEventListener('load', () => {
+    const savedTheme = localStorage.getItem('theme');
+    const html = document.documentElement;
+    
+    if (savedTheme === 'light') {
+        html.classList.remove('dark-mode');
+        themeToggle.textContent = '🌙 Theme';
+        isDarkMode = false;
+    } else {
+        html.classList.add('dark-mode');
+        themeToggle.textContent = '☀️ Theme';
+        isDarkMode = true;
+        localStorage.setItem('theme', 'dark');
+    }
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') nextSlide();
+    if (e.key === 'ArrowLeft') prevSlide();
+});
+</script>
+
+</body>
+</html>
